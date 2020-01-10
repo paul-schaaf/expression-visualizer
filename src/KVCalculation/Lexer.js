@@ -1,6 +1,6 @@
 module.exports = class Lexer {
     constructor(fileContent) {
-        this.fileArray = fileContent
+        const fileArray = fileContent
             .replace(/(\()(?=[^ ])/g, '$1 ')
             .replace(/([^)])(?=\))/g, '$1 ')
             .replace(/(\))(?=\))/g, '$1 ')
@@ -9,13 +9,29 @@ module.exports = class Lexer {
             .replace(/(\r\n|\r|\n)/g, '')
             .replace(/(<->|↔)/g, 'iff')
             .replace(/(->|→)/g, 'imp')
-            .replace(/([!¬])/g, 'not ')
             .replace(/∨/g, 'or')
+            .replace(/([!¬])/g, 'not ')
             .replace(/∧/g, 'and')
             .replace(/⊕/g, 'xor')
             .replace(/(\))(?=[a-z])/g, '$1 ')
             .replace(/([a-z])(?=\()/g, '$1 ')
             .split(' ');
+
+
+        for (let i = 0; i < fileArray.length; i++) {
+            try {
+                if (fileArray[i] === '(' && fileArray[i + 1] === 'not' && fileArray[i + 3] === ')') {
+                    fileArray[i] = null;
+                    fileArray[i + 3] = null;
+                }
+                // eslint-disable-next-line no-empty
+            } catch (err) {
+            }
+        }
+        // eslint-disable-next-line no-console
+        console.log(fileArray);
+
+        this.fileArray = fileArray.filter(token => token !== null && token !== '');
         this.index = -1;
     }
 
