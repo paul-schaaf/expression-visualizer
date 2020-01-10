@@ -28,8 +28,6 @@ module.exports = class Lexer {
             } catch (err) {
             }
         }
-        // eslint-disable-next-line no-console
-        console.log(fileArray);
 
         this.fileArray = fileArray.filter(token => token !== null && token !== '');
         this.index = -1;
