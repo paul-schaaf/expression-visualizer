@@ -17,7 +17,6 @@ module.exports = class Lexer {
             .replace(/([a-z])(?=\()/g, '$1 ')
             .split(' ');
 
-
         for (let i = 0; i < fileArray.length; i++) {
             try {
                 if (fileArray[i] === '(' && fileArray[i + 1] === 'not' && fileArray[i + 3] === ')') {
