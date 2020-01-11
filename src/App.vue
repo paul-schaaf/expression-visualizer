@@ -45,7 +45,7 @@
             };
         },
         created() {
-            window.addEventListener('keypress', (e) =>  {
+            window.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     this.onDrawButtonClick();
                 }
@@ -56,8 +56,8 @@
                 this.error = null;
                 this.kvData = [];
                 try {
-                    this.kvData = getKVArray(this.expression);
-                } catch(err) {
+                    this.kvData = getKVArray(this.expression === null ? '' : this.expression);
+                } catch (err) {
                     this.error = err;
                 }
             },
