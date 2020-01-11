@@ -6,7 +6,7 @@
                 dark
         >
             <v-spacer/>
-            <v-text-field v-model="expression" class="ma-0" placeholder="Expression goes here!"/>
+            <v-text-field v-model="expression" class="ma-0" placeholder="Expression goes here!" clearable/>
             <v-btn text large @click="onDrawButtonClick">Draw KV Map</v-btn>
             <v-spacer/>
         </v-app-bar>
