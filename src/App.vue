@@ -86,11 +86,11 @@
                     <div
                             v-for="(square, columnIndex) in row"
                             :key="'kvRow' + rowIndex + columnIndex"
-                            class="ma-1 square"
                             :class="{'square-filled': kvData[rowIndex][columnIndex]}"
+                            class="square"
+                            :style="squareStyle"
                     ></div>
                 </v-row>
-
             </v-container>
         </v-content>
     </v-app>
@@ -106,7 +106,9 @@
                 dialog: false,
                 kvData: [],
                 expression: '',
-                error: null
+                error: null,
+                height: window.innerHeight - 100,
+                width: window.innerWidth
             };
         },
         created() {
@@ -116,24 +118,44 @@
                 }
             });
         },
+        computed: {
+            squareStyle() {
+                const kvMapSideLength = this.kvData[0].length;
+                if (kvMapSideLength === 0) {
+                    return;
+                }
+                const maxSquareSize = 50;
+                const smallerSize = this.width < this.height ? this.width : this.height;
+                let squareSize = smallerSize / kvMapSideLength;
+                squareSize = squareSize < maxSquareSize ? squareSize : maxSquareSize;
+
+
+                const margin = squareSize < 24 ? 1 : 4;
+                const bottomAndTopMargin = margin * 2;
+
+                return {
+                    height: squareSize - bottomAndTopMargin + 'px',
+                    width: squareSize - bottomAndTopMargin + 'px',
+                    margin: margin + 'px'
+                };
+            }
+        },
         methods: {
             onDrawButtonClick() {
                 this.error = null;
                 this.kvData = [];
                 try {
-                    this.kvData = getKVArray(this.expression === null ? '' : this.expression);
+                    this.kvData = Object.freeze(getKVArray(this.expression === null ? '' : this.expression));
                 } catch (err) {
                     this.error = err;
                 }
-            },
+            }
         }
     };
 </script>
 
 <style lang="css">
     .square {
-        height: 20px;
-        width: 20px;
         border: 1px solid #9FA8DA !important;
     }
 
