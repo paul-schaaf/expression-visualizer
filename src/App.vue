@@ -9,6 +9,70 @@
             <v-text-field v-model="expression" class="ma-0" placeholder="Expression goes here!" clearable/>
             <v-btn text large @click="onDrawButtonClick">Draw KV Map</v-btn>
             <v-spacer/>
+            <v-dialog
+                    v-model="dialog"
+                    width="500"
+            >
+                <template v-slot:activator="{ on }">
+                    <v-btn text medium v-on="on">See Rules</v-btn>
+                </template>
+
+                <v-card>
+                    <v-card-title
+                            class="headline"
+                    >
+                        Rules
+                        <v-spacer/>
+                        <div class="body-1 pointer" @click="dialog = false">X</div>
+                    </v-card-title>
+                    <v-card-text>
+                        <div>
+                            <div class="font-weight-medium">Parentheses:</div>
+                            <ul>
+                                <li>The app does not use operator precedence. Set parentheses with the following
+                                    exceptions:
+                                </li>
+                                <li>Multiple <var>or</var> or Multiple <var>and</var> can be chained without adding
+                                    parentheses e.g. (a or b or (a and b and c))
+                                    This cannot be done with other operators.
+                                </li>
+                                <li>Not will bind itself to the symbol directly after it e.g. (not a) and (not b) and
+                                    (not c) -> not a and not b and not c
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="mt-3">
+                            <div class="font-weight-medium">Allowed Operators:</div>
+                            <ul>
+                                <li>and: and, ∧</li>
+                                <li>or: or, ∨,</li>
+                                <li>not: not, !, ¬</li>
+                                <li>xor: xor, ⊕</li>
+                                <!-- eslint-disable-next-line vue/no-parsing-error -->
+                                <li>iff: iff, <-> ↔</li>
+                                <li>imp: imp, ->, →</li>
+                                <li>Multiple variations of the same operator may appear in an expression: e.g. x or y ∨
+                                    z
+                                </li>
+                            </ul>
+
+                        </div>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer/>
+                        <v-btn
+                                color="primary"
+                                text
+                                @click="dialog = false"
+                        >
+                            OK
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
         </v-app-bar>
         <v-content>
             <v-container>
@@ -39,6 +103,7 @@
         name: 'App',
         data() {
             return {
+                dialog: false,
                 kvData: [],
                 expression: '',
                 error: null
@@ -69,14 +134,18 @@
     .square {
         height: 20px;
         width: 20px;
-        border: 1px solid #9FA8DA !important
+        border: 1px solid #9FA8DA !important;
     }
 
     .square-filled {
-        background: #81D4FA;
+        background-color: #81D4FA;
     }
 
     .v-input__slot {
         margin: 0 !important;
+    }
+
+    .pointer {
+        cursor: pointer
     }
 </style>
