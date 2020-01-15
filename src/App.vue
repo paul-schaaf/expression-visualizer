@@ -93,6 +93,14 @@
                 </v-row>
             </v-container>
         </v-content>
+        <v-footer padless>
+            <v-col
+                    class="text-center"
+                    cols="12"
+            >
+                <div class="body-2">Made by <a href="https://github.com/paul-schaaf">github.com/paul-schaaf</a> :)</div>
+            </v-col>
+        </v-footer>
     </v-app>
 </template>
 
@@ -107,7 +115,7 @@
                 kvData: [],
                 expression: '',
                 error: null,
-                height: window.innerHeight - 100,
+                height: window.innerHeight - 125,
                 width: window.innerWidth
             };
         },
