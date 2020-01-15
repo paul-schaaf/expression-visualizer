@@ -9,12 +9,13 @@
             <v-text-field v-model="expression" class="ma-0" placeholder="Expression goes here!" clearable/>
             <v-btn text large @click="onDrawButtonClick">Draw KV Map</v-btn>
             <v-spacer/>
+            <v-icon v-if="isMobile" @click="dialog = true">mdi-information-outline</v-icon>
             <v-dialog
                     v-model="dialog"
                     width="500"
             >
                 <template v-slot:activator="{ on }">
-                    <v-btn text medium v-on="on">See Rules</v-btn>
+                    <v-btn v-if="!isMobile" text medium v-on="on">View Rules</v-btn>
                 </template>
 
                 <v-card>
@@ -118,6 +119,9 @@
             });
         },
         computed: {
+            isMobile() {
+              return this.width < 500;
+            },
             squareStyle() {
                 const kvMapSideLength = this.kvData[0].length;
                 if (kvMapSideLength === 0) {
