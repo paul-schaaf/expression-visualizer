@@ -27,17 +27,16 @@
                     </v-card-title>
                     <v-card-text>
                         <div>
-                            <div class="font-weight-medium">Parentheses:</div>
+                            <div class="font-weight-medium">Precedence:</div>
                             <ul>
-                                <li>The app does not use operator precedence. Set parentheses with the following
-                                    exceptions:
+                                <li>The app uses the following operator precedence: not > and > xor > or > imp = iff. If
+                                    imp and iff are next to each other, the rightmost operator binds first e.g.
+                                    <!-- eslint-disable-next-line vue/no-parsing-error -->
+                                    a -> b <-> c -> d = a -> (b <-> (c -> d)), both sides are valid inputs.
                                 </li>
                                 <li>Multiple <var>or</var> or Multiple <var>and</var> can be chained without adding
-                                    parentheses e.g. (a or b or (a and b and c))
+                                    parentheses e.g. (a or b or (a and b and c)).
                                     This cannot be done with other operators.
-                                </li>
-                                <li>Not will bind itself to the symbol directly after it e.g. (not a) and (not b) and
-                                    (not c) -> not a and not b and not c
                                 </li>
                             </ul>
 

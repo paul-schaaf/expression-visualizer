@@ -9,6 +9,10 @@ module.exports = class Node {
         this.children.push(child);
     }
 
+    reverseChildren() {
+        this.children.reverse();
+    }
+
     getChildren() {
         return this.children;
     }
@@ -30,6 +34,7 @@ module.exports = class Node {
     }
 
     toString() {
+        if(this.type === 'variable') return this.name;
         return this.type + '{' + this.children + '}';
     }
 };
