@@ -98,7 +98,7 @@
                     class="text-center"
                     cols="12"
             >
-                <div class="body-2">Made by <a href="https://github.com/paul-schaaf">github.com/paul-schaaf</a> :)</div>
+                <div class="body-2">🐧 Made by <a href="https://github.com/paul-schaaf">github.com/paul-schaaf</a> 🐧</div>
             </v-col>
         </v-footer>
     </v-app>
