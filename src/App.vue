@@ -50,8 +50,8 @@
                                 <li>not: not, !, ¬</li>
                                 <li>xor: xor, ⊕</li>
                                 <!-- eslint-disable-next-line vue/no-parsing-error -->
-                                <li>iff: iff, <-> ↔</li>
-                                <li>imp: imp, ->, →</li>
+                                <li>iff: iff, <->, ↔, ⇔</li>
+                                <li>imp: imp, ->, →, ⇒</li>
                                 <li>Multiple variations of the same operator may appear in an expression: e.g. x or y ∨
                                     z
                                 </li>
