@@ -19,7 +19,7 @@ export default function getKVArray(input) {
     const KVArray = [];
     for (let i = 0; i < squares.length; i++) {
         KVArray[i] = [];
-        for (let j = 0; j < squares.length; j++) {
+        for (let j = 0; j < squares[i].length; j++) {
             const square = { isColored: squares[i][j].isColored(), coveredBy: [] };
             for (let k = 0; k < mapConfigs.length; k++) {
                 if (mapConfigs[k].coversSquare(i, j)) {

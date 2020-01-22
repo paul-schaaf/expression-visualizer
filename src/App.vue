@@ -178,8 +178,6 @@
                 this.kvData = [];
                 try {
                     this.kvData = Object.freeze(getKVArray(this.expression === null ? '' : this.expression));
-                    // eslint-disable-next-line no-console
-                    console.log(this.kvData);
                 } catch (err) {
                     this.error = err;
                 }
