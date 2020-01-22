@@ -21,6 +21,7 @@ module.exports = class Lexer {
             .replace(/(\))(?=[a-z])/g, '$1 ')
             .replace(/([a-z])(?=\()/g, '$1 ')
             .split(' ')
+            .filter(t => t !== '')
             .reverse();
     }
 
