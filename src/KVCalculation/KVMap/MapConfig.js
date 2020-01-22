@@ -40,6 +40,10 @@ module.exports = class MapConfig extends KVNode {
         return this.squares[i][j];
     }
 
+    coversSquare(i, j) {
+        return this.squares[i][j].isColored();
+    }
+
     setName(name) {
         this.name = name;
     }

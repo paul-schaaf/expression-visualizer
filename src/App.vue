@@ -15,18 +15,25 @@
                     width="500"
             >
                 <template v-slot:activator="{ on }">
-                    <v-btn v-if="!isMobile" text medium v-on="on">View Rules</v-btn>
+                    <v-btn v-if="!isMobile" text medium v-on="on">View How-to</v-btn>
                 </template>
 
                 <v-card>
                     <v-card-title
                             class="headline"
                     >
-                        Rules
+                        Rules & Features
                         <v-spacer/>
                         <div class="body-1 pointer" @click="dialog = false">X</div>
                     </v-card-title>
                     <v-card-text>
+                        <div>
+                            <div class="font-weight-medium">Nice little things:</div>
+                            <ul>
+                                <li>You can hover/tap squares to see the Conjunctive Normal Form of that square.
+                                </li>
+                            </ul>
+                        </div>
                         <div>
                             <div class="font-weight-medium">Precedence:</div>
                             <ul>
@@ -40,7 +47,6 @@
                                     This cannot be done with other operators.
                                 </li>
                             </ul>
-
                         </div>
                         <div class="mt-3">
                             <div class="font-weight-medium">Allowed Operators:</div>
@@ -83,13 +89,20 @@
                         align="center"
                         justify="center"
                 >
-                    <div
-                            v-for="(square, columnIndex) in row"
+                    <v-tooltip
+                            top v-for="(square, columnIndex) in row"
                             :key="'kvRow' + rowIndex + columnIndex"
-                            :class="{'square-filled': kvData[rowIndex][columnIndex]}"
-                            class="square"
-                            :style="squareStyle"
-                    ></div>
+                    >
+                        <template v-slot:activator="{ on }">
+                            <div
+                                    :class="{'square-filled': kvData[rowIndex][columnIndex].isColored}"
+                                    :style="squareStyle"
+                                    class="square"
+                                    v-on="on"
+                            ></div>
+                        </template>
+                        <span>{{ getKVSquareTooltipMessage(rowIndex, columnIndex) }}</span>
+                    </v-tooltip>
                 </v-row>
             </v-container>
         </v-content>
@@ -98,7 +111,8 @@
                     class="text-center"
                     cols="12"
             >
-                <div class="body-2">🐧 Made by <a href="https://github.com/paul-schaaf">github.com/paul-schaaf</a> 🐧</div>
+                <div class="body-2">🐧 Made by <a href="https://github.com/paul-schaaf">github.com/paul-schaaf</a> 🐧
+                </div>
             </v-col>
         </v-footer>
     </v-app>
@@ -128,7 +142,7 @@
         },
         computed: {
             isMobile() {
-              return this.width < 500;
+                return this.width < 500;
             },
             squareStyle() {
                 const kvMapSideLength = this.kvData[0].length;
@@ -157,9 +171,23 @@
                 this.kvData = [];
                 try {
                     this.kvData = Object.freeze(getKVArray(this.expression === null ? '' : this.expression));
+                    // eslint-disable-next-line no-console
+                    console.log(this.kvData);
                 } catch (err) {
                     this.error = err;
                 }
+            },
+            getKVSquareTooltipMessage(rowIndex, columnIndex) {
+                const square = this.kvData[rowIndex][columnIndex];
+                let CNF = '';
+                for (let i = 0; i < square.coveredBy.length; i++) {
+                    const { name, isNegated } = square.coveredBy[i];
+                    if (i !== 0) {
+                        CNF += '  ∧  ';
+                    }
+                    CNF += isNegated ? `¬ ${name}` : name;
+                }
+                return CNF;
             }
         }
     };

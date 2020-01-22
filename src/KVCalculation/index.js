@@ -13,7 +13,27 @@ export default function getKVArray(input) {
     const variables = getVariables(lexer);
     const mapConfigs = MapConfigCreator.createMapConfigs(variables.length);
     const KVRoot = convertToKVTree(root, mapConfigs, variables);
-    return KVRoot.execute().toArray();
+    const expressionMapConfig = KVRoot.execute();
+    const squares = expressionMapConfig.getSquares();
+
+    const KVArray = [];
+    for (let i = 0; i < squares.length; i++) {
+        KVArray[i] = [];
+        for (let j = 0; j < squares.length; j++) {
+            const square = { isColored: squares[i][j].isColored(), coveredBy: [] };
+            for (let k = 0; k < mapConfigs.length; k++) {
+                if (mapConfigs[k].coversSquare(i, j)) {
+                    square.coveredBy.push({ name: variables[k], isNegated: false });
+                } else {
+                    square.coveredBy.push({ name: variables[k], isNegated: true });
+                }
+            }
+
+            KVArray[i][j] = square;
+        }
+    }
+
+    return KVArray;
 }
 
 function createLexer(input) {
