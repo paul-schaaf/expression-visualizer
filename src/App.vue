@@ -7,7 +7,7 @@
         >
             <v-spacer/>
             <v-text-field v-model="expression" class="ma-0" placeholder="Expression goes here!" clearable/>
-            <v-btn text large @click="onDrawButtonClick">Draw KV Map</v-btn>
+            <v-btn text large @click="triggerMapCreation">Draw KV Map</v-btn>
             <v-spacer/>
             <v-icon v-if="isMobile" @click="dialog = true">mdi-information-outline</v-icon>
             <v-dialog
@@ -67,6 +67,13 @@
                     </v-card-text>
 
                     <v-card-actions>
+                        <v-btn
+                                color="primary"
+                                text
+                                @click="viewExample"
+                        >
+                            View Example
+                        </v-btn>
                         <v-spacer/>
                         <v-btn
                                 color="primary"
@@ -136,7 +143,7 @@
         created() {
             window.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    this.onDrawButtonClick();
+                    this.triggerMapCreation();
                 }
             });
         },
@@ -166,7 +173,7 @@
             }
         },
         methods: {
-            onDrawButtonClick() {
+            triggerMapCreation() {
                 this.error = null;
                 this.kvData = [];
                 try {
@@ -188,6 +195,14 @@
                     CNF += isNegated ? `¬ ${name}` : name;
                 }
                 return CNF;
+            },
+            viewExample() {
+                this.expression = `(p ∧ ((q ∧ ((r ∧ ((x ∧ y ∧ z) ∨ (¬x ∧ (¬y ∨ (y ∧ ¬z)))))∨
+(¬r ∧ ((x ∧ ((y ∧ ¬z) ∨ (¬y ∧ z))) ∨ (¬x ∧ ¬y ∧ ¬z))))) ∨ (¬q ∧ ¬r ∧ x ∧ y)))∨
+(¬p ∧ ((q ∧ ((r ∧ ((x ∧ ¬y ∧ ¬z) ∨ (¬x ∧ y))) ∨ (¬r ∧ x ∧ ¬y ∧ ¬z)))∨
+(¬q ∧ ((r ∧ ¬x ∧ ¬y ∧ z) ∨ (¬r ∧ x ∧ ¬y)))))`;
+                this.triggerMapCreation();
+                this.dialog = false;
             }
         }
     };
