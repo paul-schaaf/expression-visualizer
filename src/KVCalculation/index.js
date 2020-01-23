@@ -5,7 +5,7 @@ const MapConfigCreator = require('./KVMap/MapConfigCreator');
 
 const nonVariables = require('./enums/nonVariables');
 
-export default function getKVArray(input) {
+export default function getKVData(input) {
     const lexer = createLexer(input);
     const root = parse(lexer);
     lexer.reset();
@@ -33,7 +33,10 @@ export default function getKVArray(input) {
         }
     }
 
-    return KVArray;
+    return {
+        KVArray,
+        variables,
+    };
 }
 
 function createLexer(input) {

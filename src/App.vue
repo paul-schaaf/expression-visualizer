@@ -16,7 +16,16 @@
         <v-content>
             <v-container>
                 <p v-if="error" class="text-center">{{error}}</p>
-                <k-v-map :kv-data="kvData"/>
+                <k-v-map :kv-data="kvData.KVArray"/>
+                <div class="d-flex">
+                    <div v-for="variable in kvData.variables" :key="variable" class="ml-2">{{ variable }}</div>
+                </div>
+                <div class="d-flex">
+                    <div v-for="variable in kvData.variables" :key="variable" class="direction-down ml-2">
+                        <div v-for="(number, index) in getNumbersForVariable(variable)" :key="variable + index">{{ number }}</div>
+                    </div>
+                </div>
+
             </v-container>
         </v-content>
         <v-footer padless>
@@ -32,7 +41,7 @@
 </template>
 
 <script>
-    import getKVArray from './KVCalculation';
+    import getKVData from './KVCalculation';
     import InfoDialog from './components/InfoDialog';
     import KVMap from './components/KVMap';
 
@@ -43,7 +52,7 @@
             return {
                 tab: null,
                 showInfoDialog: false,
-                kvData: [],
+                kvData: {},
                 expression: '',
                 error: null,
                 width: window.innerWidth
@@ -66,7 +75,7 @@
                 this.error = null;
                 this.kvData = [];
                 try {
-                    this.kvData = Object.freeze(getKVArray(this.expression === null ? '' : this.expression));
+                    this.kvData = Object.freeze(getKVData(this.expression === null ? '' : this.expression));
                 } catch (err) {
                     this.error = err;
                 }
@@ -81,6 +90,20 @@
             },
             onDialogChange(newValue) {
                 this.showInfoDialog = newValue;
+            },
+            getNumbersForVariable(variable){
+                const index = this.kvData.variables.indexOf(variable);
+                const amount = 2 ** this.kvData.variables.length;
+                const segmentSize = amount / (2 ** (index + 1));
+                let currentNumber = 0;
+                const numbers = [];
+                for (let i = 0; i < amount / segmentSize; i++) {
+                    for (let j = 0; j < segmentSize; j++) {
+                        numbers.push(currentNumber);
+                    }
+                    currentNumber = currentNumber === 0 ? 1 : 0;
+                }
+                return numbers;
             }
         }
     };
@@ -89,5 +112,10 @@
 <style lang="css">
     .v-input__slot {
         margin: 0 !important;
+    }
+
+    .direction-down {
+        display: flex;
+        flex-direction: column;
     }
 </style>
