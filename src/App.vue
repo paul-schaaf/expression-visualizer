@@ -7,7 +7,7 @@
         >
             <v-spacer/>
             <v-text-field v-model="expression" class="ma-0" placeholder="Expression goes here!" clearable/>
-            <v-btn text large @click="triggerMapCreation">Evaluate</v-btn>
+            <v-btn text large @click="triggerMapCreation">{{ isMobile ? 'Eval' : 'Evaluate'}}</v-btn>
             <v-spacer/>
             <v-icon v-if="isMobile" @click.stop="onDialogChange(true)">mdi-information-outline</v-icon>
             <info-dialog :show="showInfoDialog" @updated="onDialogChange" @view-example-clicked="viewExample"/>
@@ -26,13 +26,15 @@
             <v-container>
                 <p v-if="error" class="text-center">{{error}}</p>
                 <k-v-map v-if="tab === 0" :kv-data="kvData.KVArray"/>
-                <div v-else class="d-flex">
+                <div v-else class="d-flex justify-center">
                     <div class="d-flex">
-                        <div v-for="variable in kvData.variables" :key="variable" class="direction-down ml-2">
-                            <div>{{ variable }}</div>
+                        <div v-for="variable in kvData.variables" :key="variable" class="direction-down">
+                            <div class="pl-2">{{ variable }}</div>
+                            <hr/>
                             <div
                                     v-for="(number, index) in getNumbersForVariable(variable)"
                                     :key="variable + index"
+                                    class="pl-2"
                             >
                                 {{ number }}
                             </div>
@@ -48,11 +50,11 @@
                             >
                                 {{ token }}
                             </div>
+                            <hr/>
                             <div
                                     v-for="(number, numberIndex) in getTruthTableNumbers(token)"
                                     :key="'expToken:' + token + index + 'numberIndex:' + numberIndex"
-                                    class="pl-2"
-                                    style="width: 100%"
+                                    class="pl-2 pointer"
                             >
                                 {{ number }}
                             </div>
@@ -171,6 +173,10 @@
 </script>
 
 <style lang="css">
+    body, html {
+        overflow-y: auto !important;
+    }
+
     .v-input__slot {
         margin: 5px 0 0 0 !important;
     }
@@ -182,7 +188,7 @@
 
     .truthtable-right {
         display: flex;
-        overflow-x: scroll;
+        overflow-x: auto;
         white-space: nowrap;
     }
 
