@@ -7,21 +7,33 @@
         >
             <v-spacer/>
             <v-text-field v-model="expression" class="ma-0" placeholder="Expression goes here!" clearable/>
-            <v-btn text large @click="triggerMapCreation">Draw KV Map</v-btn>
+            <v-btn text large @click="triggerMapCreation">Evaluate</v-btn>
             <v-spacer/>
             <v-icon v-if="isMobile" @click.stop="onDialogChange(true)">mdi-information-outline</v-icon>
             <info-dialog :show="showInfoDialog" @updated="onDialogChange" @view-example-clicked="viewExample"/>
-
+            <template v-slot:extension>
+                <div class="d-flex justify-center mt-1" style="width: 100%">
+                    <v-btn :class="{ 'active-tab': tab === 0, 'inactive-tab': tab !== 0 }" text large tile
+                           @click="tab = 0">KV Map
+                    </v-btn>
+                    <v-btn :class="{ 'active-tab': tab === 1, 'inactive-tab': tab !== 1 }" text large tile
+                           @click="tab = 1">Truth Table
+                    </v-btn>
+                </div>
+            </template>
         </v-app-bar>
         <v-content>
             <v-container>
                 <p v-if="error" class="text-center">{{error}}</p>
-                <k-v-map :kv-data="kvData.KVArray"/>
-                <div class="d-flex">
+                <k-v-map v-if="tab === 0" :kv-data="kvData.KVArray"/>
+                <div v-else class="d-flex">
                     <div class="d-flex">
                         <div v-for="variable in kvData.variables" :key="variable" class="direction-down ml-2">
                             <div>{{ variable }}</div>
-                            <div v-for="(number, index) in getNumbersForVariable(variable)" :key="variable + index">
+                            <div
+                                    v-for="(number, index) in getNumbersForVariable(variable)"
+                                    :key="variable + index"
+                            >
                                 {{ number }}
                             </div>
                         </div>
@@ -29,12 +41,18 @@
                     <div class="ml-4 truthtable-right">
                         <div
                                 v-for="(token, index) in kvData.expressionArray" :key="token + index"
-                                class="direction-down ml-2"
+                                class="direction-down"
                         >
-                            <div>{{ token }}</div>
+                            <div
+                                    class="pl-2"
+                            >
+                                {{ token }}
+                            </div>
                             <div
                                     v-for="(number, numberIndex) in getTruthTableNumbers(token)"
                                     :key="'expToken:' + token + index + 'numberIndex:' + numberIndex"
+                                    class="pl-2"
+                                    style="width: 100%"
                             >
                                 {{ number }}
                             </div>
@@ -48,7 +66,8 @@
                     class="text-center"
                     cols="12"
             >
-                <div class="body-2">🐧 Made by <a href="https://github.com/paul-schaaf">github.com/paul-schaaf</a> 🐧
+                <div class="body-2">
+                    🐧 Made by <a href="https://github.com/paul-schaaf">github.com/paul-schaaf</a> 🐧
                 </div>
             </v-col>
         </v-footer>
@@ -74,6 +93,7 @@
         components: { KVMap, InfoDialog },
         data() {
             return {
+                tab: 0,
                 showInfoDialog: false,
                 kvData: {},
                 expression: '',
@@ -94,6 +114,10 @@
             },
         },
         methods: {
+            setXY(row, column) {
+                this.hoveredRow = row;
+                this.hoveredColumn = column;
+            },
             triggerMapCreation() {
                 this.error = null;
                 this.kvData = [];
@@ -136,7 +160,7 @@
                 const truthTable = this.kvData.truthTableArray[truthTableIndex];
 
                 truthTableIndex++;
-                if(truthTableIndex === this.kvData.truthTableArray.length){
+                if (truthTableIndex === this.kvData.truthTableArray.length) {
                     truthTableIndex = 0;
                 }
 
@@ -148,7 +172,7 @@
 
 <style lang="css">
     .v-input__slot {
-        margin: 0 !important;
+        margin: 5px 0 0 0 !important;
     }
 
     .direction-down {
@@ -160,5 +184,13 @@
         display: flex;
         overflow-x: scroll;
         white-space: nowrap;
+    }
+
+    .inactive-tab {
+        border-bottom: 2px solid transparent;
+    }
+
+    .active-tab {
+        border-bottom: 2px solid white;
     }
 </style>

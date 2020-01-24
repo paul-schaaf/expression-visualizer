@@ -35,7 +35,7 @@
         },
         data() {
             return {
-                height: window.innerHeight - 125,
+                height: window.innerHeight - 180,
                 width: window.innerWidth
             };
         },
