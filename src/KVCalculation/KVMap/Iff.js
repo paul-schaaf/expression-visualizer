@@ -12,6 +12,12 @@ module.exports = class Iff extends KVNode {
         const implicationA = new Implication(...this.children);
         const implicationB = new Implication(...this.children.slice().reverse());
         const and = new And(implicationA, implicationB);
-        return and.execute();
+        this.mapConfig = and.execute();
+        this.truthTable = and.getTruthTable();
+        return this.mapConfig;
+    }
+
+    toString() {
+        return `( ${this.children[0]} ↔ ${this.children[1]} )`;
     }
 };

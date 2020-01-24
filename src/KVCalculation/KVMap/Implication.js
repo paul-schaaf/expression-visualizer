@@ -10,6 +10,12 @@ module.exports = class Implication extends KVNode {
     execute() {
         const negation = new Negation(this.children[0]);
         const or = new Or(negation, this.children[1]);
-        return or.execute();
+        this.mapConfig = or.execute();
+        this.truthTable = or.truthTable;
+        return this.mapConfig;
+    }
+
+    toString(){
+        return `( ${this.children[0]} → ${this.children[1]} )`;
     }
 };

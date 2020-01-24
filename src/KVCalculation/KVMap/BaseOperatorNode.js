@@ -1,12 +1,12 @@
 const KVNode = require('./KVNode');
 const MapConfig = require('./MapConfig');
 
-module.exports = class BaseOperatorNode extends KVNode{
+module.exports = class BaseOperatorNode extends KVNode {
     constructor(children = []) {
         super(children);
     }
 
-    execute(f) {
+    execute(f, truthTableF) {
         const mapConfigs = this.children.map(c => c.execute());
         const height = mapConfigs[0].getHeight();
         const breadth = mapConfigs[0].getBreadth();
@@ -19,6 +19,19 @@ module.exports = class BaseOperatorNode extends KVNode{
                 }
             }
         }
+
+        this.truthTable = this.createTruthTable(truthTableF);
+
         return mF;
+    }
+
+    createTruthTable(truthTableF){
+        const truthTables = this.children.map(c => c.getTruthTable());
+
+        const truthTable = {};
+        Object.keys(truthTables[0]).forEach(key => {
+            truthTable[key] = truthTableF(truthTables[0][key], truthTables[1][key]);
+        });
+        return truthTable;
     }
 };

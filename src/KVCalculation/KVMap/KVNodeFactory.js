@@ -11,6 +11,7 @@ module.exports = class KVNodeFactory {
             const index = variables.indexOf(node.getName());
             const mapConfig = mapConfigs[index].getCopy();
             mapConfig.setName(node.getName());
+            mapConfig.setTruthTable(createTruthTable(mapConfig, mapConfigs));
             return mapConfig;
         } else if (node.getType() === 'not') {
             return new Negation();
@@ -27,3 +28,27 @@ module.exports = class KVNodeFactory {
         }
     }
 };
+
+function createTruthTable(mapConfig, mapConfigs) {
+    const squares = mapConfig.getSquares();
+    const truthTable = {};
+    for (let i = 0; i < squares.length; i++) {
+        for (let j = 0; j < squares[0].length; j++) {
+            let truthTableKey = '';
+            for (let k = 0; k < mapConfigs.length; k++) {
+                truthTableKey += mapConfigs[k].coversSquare(i, j) ? '1' : '0';
+            }
+            truthTable[truthTableKey] = mapConfig.coversSquare(i, j) ? 1 : 0;
+        }
+    }
+    const orderedTruthTable = {};
+    Object.keys(truthTable).sort(sortBinaryStrings).forEach(key => orderedTruthTable[key] = truthTable[key]);
+    return orderedTruthTable;
+}
+
+function sortBinaryStrings(a, b) {
+    if (a === b) {
+        return 0;
+    }
+    return parseInt(a, 2) < parseInt(b, 2) ? -1 : 1;
+}

@@ -18,14 +18,29 @@
                 <p v-if="error" class="text-center">{{error}}</p>
                 <k-v-map :kv-data="kvData.KVArray"/>
                 <div class="d-flex">
-                    <div v-for="variable in kvData.variables" :key="variable" class="ml-2">{{ variable }}</div>
-                </div>
-                <div class="d-flex">
-                    <div v-for="variable in kvData.variables" :key="variable" class="direction-down ml-2">
-                        <div v-for="(number, index) in getNumbersForVariable(variable)" :key="variable + index">{{ number }}</div>
+                    <div class="d-flex">
+                        <div v-for="variable in kvData.variables" :key="variable" class="direction-down ml-2">
+                            <div>{{ variable }}</div>
+                            <div v-for="(number, index) in getNumbersForVariable(variable)" :key="variable + index">
+                                {{ number }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ml-4 truthtable-right">
+                        <div
+                                v-for="(token, index) in kvData.expressionArray" :key="token + index"
+                                class="direction-down ml-2"
+                        >
+                            <div>{{ token }}</div>
+                            <div
+                                    v-for="(number, numberIndex) in getTruthTableNumbers(token)"
+                                    :key="'expToken:' + token + index + 'numberIndex:' + numberIndex"
+                            >
+                                {{ number }}
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </v-container>
         </v-content>
         <v-footer padless>
@@ -45,17 +60,25 @@
     import InfoDialog from './components/InfoDialog';
     import KVMap from './components/KVMap';
 
+    function sortBinaryStrings(a, b) {
+        if (a === b) {
+            return 0;
+        }
+        return parseInt(a, 2) < parseInt(b, 2) ? -1 : 1;
+    }
+
+    let truthTableIndex = 0;
+
     export default {
         name: 'App',
         components: { KVMap, InfoDialog },
         data() {
             return {
-                tab: null,
                 showInfoDialog: false,
                 kvData: {},
                 expression: '',
                 error: null,
-                width: window.innerWidth
+                width: window.innerWidth,
             };
         },
         created() {
@@ -91,7 +114,7 @@
             onDialogChange(newValue) {
                 this.showInfoDialog = newValue;
             },
-            getNumbersForVariable(variable){
+            getNumbersForVariable(variable) {
                 const index = this.kvData.variables.indexOf(variable);
                 const amount = 2 ** this.kvData.variables.length;
                 const segmentSize = amount / (2 ** (index + 1));
@@ -104,6 +127,20 @@
                     currentNumber = currentNumber === 0 ? 1 : 0;
                 }
                 return numbers;
+            },
+            getTruthTableNumbers(token) {
+                if (token === ')' || token === '(') {
+                    return [];
+                }
+
+                const truthTable = this.kvData.truthTableArray[truthTableIndex];
+
+                truthTableIndex++;
+                if(truthTableIndex === this.kvData.truthTableArray.length){
+                    truthTableIndex = 0;
+                }
+
+                return Object.keys(truthTable).sort(sortBinaryStrings).map(key => truthTable[key]);
             }
         }
     };
@@ -117,5 +154,11 @@
     .direction-down {
         display: flex;
         flex-direction: column;
+    }
+
+    .truthtable-right {
+        display: flex;
+        overflow-x: scroll;
+        white-space: nowrap;
     }
 </style>

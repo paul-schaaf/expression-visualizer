@@ -52,8 +52,8 @@ module.exports = class MapConfig extends KVNode {
         const newMapConfig = new MapConfig(this.height, this.breadth);
         for (let i = 0; i < this.height; i++) {
             for (let j = 0; j < this.breadth; j++) {
-                if(this.getSquare(i,j).isColored()){
-                    newMapConfig.colorSquare(i,j);
+                if (this.getSquare(i, j).isColored()) {
+                    newMapConfig.colorSquare(i, j);
                 }
             }
         }
@@ -61,11 +61,7 @@ module.exports = class MapConfig extends KVNode {
     }
 
     toString() {
-        let toString = '';
-        for (let i = 0; i < this.height; i++) {
-            toString += this.squares[i].join(' ') + '\n';
-        }
-        return toString;
+        return this.name;
     }
 
     toArray() {
@@ -78,5 +74,13 @@ module.exports = class MapConfig extends KVNode {
 
     execute() {
         return this;
+    }
+
+    toMapConfigArray() {
+        return [this];
+    }
+
+    toTruthTableArray() {
+        return [this.truthTable];
     }
 };

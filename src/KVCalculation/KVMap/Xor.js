@@ -12,6 +12,13 @@ module.exports = class Xor extends KVNode {
         const or = new Or(...this.children);
         const and = new And(...this.children);
         const nand = new Negation(and);
-        return new And(or, nand).execute();
+        const and2 = new And(or, nand);
+        this.mapConfig = and2.execute();
+        this.truthTable = and2.getTruthTable();
+        return this.mapConfig;
+    }
+
+    toString() {
+        return `( ${this.children[0]} ⊕ ${this.children[1]} )`;
     }
 };

@@ -34,8 +34,11 @@ export default function getKVData(input) {
     }
 
     return {
+        mapConfigArray: KVRoot.toMapConfigArray(),
         KVArray,
         variables,
+        expressionArray: KVRoot.toString().split(' '),
+        truthTableArray: KVRoot.toTruthTableArray().flat(Infinity)
     };
 }
 
