@@ -6,7 +6,8 @@
                 dark
         >
             <v-spacer/>
-            <v-text-field v-model="expression" class="ma-0" placeholder="Expression goes here!" clearable/>
+            <v-text-field v-model="expression" :class="{'margin-left-150': !isMobile}"
+                          placeholder="Expression goes here!" clearable/>
             <v-btn text large @click="triggerMapCreation">{{ isMobile ? 'Eval' : 'Evaluate'}}</v-btn>
             <v-spacer/>
             <v-icon v-if="isMobile" @click.stop="onDialogChange(true)">mdi-information-outline</v-icon>
@@ -198,5 +199,9 @@
 
     .active-tab {
         border-bottom: 2px solid white;
+    }
+
+    .margin-left-150 {
+        margin-left: 150px;
     }
 </style>
