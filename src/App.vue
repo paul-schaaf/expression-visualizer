@@ -26,42 +26,9 @@
         <v-content>
             <v-container>
                 <p v-if="error" class="text-center">{{error}}</p>
-                <k-v-map v-if="tab === 0" :kv-data="kvData.KVArray"/>
-                <div v-else class="d-flex justify-center">
-                    <div class="d-flex">
-                        <div v-for="variable in kvData.variables" :key="variable" class="direction-down">
-                            <div class="pl-2">{{ variable }}</div>
-                            <hr/>
-                            <div
-                                    v-for="(number, index) in getNumbersForVariable(variable)"
-                                    :key="variable + index"
-                                    class="pl-2"
-                            >
-                                {{ number }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ml-4 truthtable-right">
-                        <div
-                                v-for="(token, index) in kvData.expressionArray" :key="token + index"
-                                class="direction-down"
-                        >
-                            <div
-                                    class="pl-2"
-                            >
-                                {{ token }}
-                            </div>
-                            <hr/>
-                            <div
-                                    v-for="(number, numberIndex) in getTruthTableNumbers(token)"
-                                    :key="'expToken:' + token + index + 'numberIndex:' + numberIndex"
-                                    class="pl-2 pointer"
-                            >
-                                {{ number }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <k-v-map v-if="tab === 0" :kv-array="kvData.KVArray"/>
+                <truth-table v-else :expression-array="kvData.expressionArray"
+                             :truth-table-array="kvData.truthTableArray" :variables="kvData.variables"/>
             </v-container>
         </v-content>
         <v-footer padless>
@@ -81,19 +48,11 @@
     import getKVData from './KVCalculation';
     import InfoDialog from './components/InfoDialog';
     import KVMap from './components/KVMap';
-
-    function sortBinaryStrings(a, b) {
-        if (a === b) {
-            return 0;
-        }
-        return parseInt(a, 2) < parseInt(b, 2) ? -1 : 1;
-    }
-
-    let truthTableIndex = 0;
+    import TruthTable from './components/TruthTable';
 
     export default {
         name: 'App',
-        components: { KVMap, InfoDialog },
+        components: { TruthTable, KVMap, InfoDialog },
         data() {
             return {
                 tab: 0,
@@ -117,10 +76,6 @@
             },
         },
         methods: {
-            setXY(row, column) {
-                this.hoveredRow = row;
-                this.hoveredColumn = column;
-            },
             triggerMapCreation() {
                 this.error = null;
                 this.kvData = [];
@@ -141,34 +96,6 @@
             onDialogChange(newValue) {
                 this.showInfoDialog = newValue;
             },
-            getNumbersForVariable(variable) {
-                const index = this.kvData.variables.indexOf(variable);
-                const amount = 2 ** this.kvData.variables.length;
-                const segmentSize = amount / (2 ** (index + 1));
-                let currentNumber = 0;
-                const numbers = [];
-                for (let i = 0; i < amount / segmentSize; i++) {
-                    for (let j = 0; j < segmentSize; j++) {
-                        numbers.push(currentNumber);
-                    }
-                    currentNumber = currentNumber === 0 ? 1 : 0;
-                }
-                return numbers;
-            },
-            getTruthTableNumbers(token) {
-                if (token === ')' || token === '(') {
-                    return [];
-                }
-
-                const truthTable = this.kvData.truthTableArray[truthTableIndex];
-
-                truthTableIndex++;
-                if (truthTableIndex === this.kvData.truthTableArray.length) {
-                    truthTableIndex = 0;
-                }
-
-                return Object.keys(truthTable).sort(sortBinaryStrings).map(key => truthTable[key]);
-            }
         }
     };
 </script>

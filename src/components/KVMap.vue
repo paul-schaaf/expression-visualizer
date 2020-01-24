@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-row
-                v-for="(row, rowIndex) in kvData"
+                v-for="(row, rowIndex) in kvArray"
                 :key="'kvRow' + rowIndex"
                 align="center"
                 justify="center"
@@ -12,7 +12,7 @@
             >
                 <template v-slot:activator="{ on }">
                     <div
-                            :class="{'square-filled': kvData[rowIndex][columnIndex].isColored}"
+                            :class="{'square-filled': kvArray[rowIndex][columnIndex].isColored}"
                             :style="squareStyle"
                             class="square"
                             v-on="on"
@@ -28,7 +28,7 @@
     export default {
         name: 'KVMap',
         props: {
-            kvData: {
+            kvArray: {
                 type: Array,
                 default: () => []
             }
@@ -41,7 +41,7 @@
         },
         computed: {
             squareStyle() {
-                const kvMapSideLength = this.kvData[0].length;
+                const kvMapSideLength = this.kvArray[0].length;
                 if (kvMapSideLength === 0) {
                     return;
                 }
@@ -63,7 +63,7 @@
         },
         methods: {
             getKVSquareTooltipMessage(rowIndex, columnIndex) {
-                const square = this.kvData[rowIndex][columnIndex];
+                const square = this.kvArray[rowIndex][columnIndex];
                 let CNF = '';
                 for (let i = 0; i < square.coveredBy.length; i++) {
                     const { name, isNegated } = square.coveredBy[i];
