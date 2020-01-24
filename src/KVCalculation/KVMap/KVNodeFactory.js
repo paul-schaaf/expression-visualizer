@@ -41,14 +41,5 @@ function createTruthTable(mapConfig, mapConfigs) {
             truthTable[truthTableKey] = mapConfig.coversSquare(i, j) ? 1 : 0;
         }
     }
-    const orderedTruthTable = {};
-    Object.keys(truthTable).sort(sortBinaryStrings).forEach(key => orderedTruthTable[key] = truthTable[key]);
-    return orderedTruthTable;
-}
-
-function sortBinaryStrings(a, b) {
-    if (a === b) {
-        return 0;
-    }
-    return parseInt(a, 2) < parseInt(b, 2) ? -1 : 1;
+    return truthTable;
 }

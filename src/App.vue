@@ -26,9 +26,15 @@
         <v-content>
             <v-container>
                 <p v-if="error" class="text-center">{{error}}</p>
-                <k-v-map v-if="tab === 0" :kv-array="kvData.KVArray"/>
-                <truth-table v-else :expression-array="kvData.expressionArray"
-                             :truth-table-array="kvData.truthTableArray" :variables="kvData.variables"/>
+                <keep-alive>
+                    <component
+                            :is="currentTabComponent"
+                            :kv-array="kvData.KVArray"
+                            :expression-array="kvData.expressionArray"
+                            :truth-table-array="kvData.truthTableArray"
+                            :variables="kvData.variables"
+                    />
+                </keep-alive>
             </v-container>
         </v-content>
         <v-footer padless>
@@ -74,6 +80,9 @@
             isMobile() {
                 return this.width < 500;
             },
+            currentTabComponent() {
+                return this.tab === 0 ? KVMap : TruthTable;
+            }
         },
         methods: {
             triggerMapCreation() {
